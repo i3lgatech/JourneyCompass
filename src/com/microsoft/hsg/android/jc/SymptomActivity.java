@@ -193,7 +193,7 @@ public class SymptomActivity extends Activity implements
 			SymptomActivity.this.startActivity(intent);
 		} else {
 			Toast.makeText(SymptomActivity.this,
-					"Setting requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
+					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.microsoft.hsg.android.jc;
 
+import com.microsoft.hsg.android.jc.util.CustomUtil;
+
 import android.app.ProgressDialog;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -12,6 +14,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 public class ReportActivity extends Activity {
 	private WebView webView;
@@ -62,6 +65,16 @@ public class ReportActivity extends Activity {
 					pd = ProgressDialog.show(ReportActivity.this, "", "Loading...",true);
 			    }
 
+				@Override
+				public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+					super.onReceivedError(view, errorCode, description, failingUrl);
+					
+					if(pd.isShowing()&&pd!=null)
+	                {
+	                    pd.dismiss();
+	                }
+				}
+				
 				@Override
 	            public void onPageFinished(WebView view, String url) {
 					super.onPageFinished(view, url);
@@ -119,7 +132,12 @@ public class ReportActivity extends Activity {
 	}
 
 	public void loadSettingsActivity(View arg) {
-		Intent intent = new Intent(ReportActivity.this, SettingsActivity.class);
-		ReportActivity.this.startActivity(intent);
+		if (CustomUtil.getInstance().isNetworkAvailable(this)) {
+			Intent intent = new Intent(ReportActivity.this, SettingsActivity.class);
+			ReportActivity.this.startActivity(intent);
+		} else {
+			Toast.makeText(ReportActivity.this,
+					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
+		}
 	}
 }
