@@ -11,12 +11,12 @@
     <string name="constipation_label">Constipation</string>
     <string name="fatigue_label">Fatigue</string>
     <string name="sleep_label">Sleep</string>
-    <string name="connect_desc">Press the button to connect or disconnect this device.\n\nAfter you signed on, you can press Symptoms to start tracking your symptoms.\n\nIf you have a problem tracking your symptoms and are redirected to this panel, then please try to disconnect and connect again.</string>
+    <string name="connect_desc">Press the button to connect or disconnect this device.\n\nAfter you have signed on, you can press Symptoms to start tracking your symptoms.\n\nIf you have a problem tracking your symptoms and are redirected to this panel, then please try to disconnect and connect again.</string>
     <string name="symptoms_desc">Symptoms: Press this to add your symptoms.</string>
     <string name="report_desc">Report: Press this to see your symptom report.</string>
     <string name="warning_report_desc">It may take a few seconds to load report page.\nIf report is not loaded, please check your WIFI connection.</string>
     <string name="hv_dc_warning">Disconnect Warning</string>
-    <string name="hv_dc_msg">Please note that if you disconnect your device, you will not able to track your symptoms.\nTo track again, you need to reconnect, reauthtenticate and reauthorize this app.\n\nDo you wnat to diconnect?</string>
+    <string name="hv_dc_msg">Please note that if you disconnect your device, you will not be able to track your symptoms.\nTo track again, you need to reconnect, reauthenticate and reauthorize this app.\n\nDo you want to disconnect?</string>
     <string name="hv_dc_YES">Yes</string>
     <string name="hv_dc_NO">No</string>
 

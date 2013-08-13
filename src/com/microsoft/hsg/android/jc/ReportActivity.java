@@ -61,18 +61,18 @@ public class ReportActivity extends Activity {
 
 				@Override
 				public void onPageStarted(WebView view, String url, Bitmap favicon) {
-					super.onPageStarted(view, url, favicon);
 					pd = ProgressDialog.show(ReportActivity.this, "", "Loading...",true);
+					super.onPageStarted(view, url, favicon);
 			    }
 
 				@Override
 				public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-					super.onReceivedError(view, errorCode, description, failingUrl);
-					
 					if(pd.isShowing()&&pd!=null)
 	                {
 	                    pd.dismiss();
 	                }
+					super.onReceivedError(view, errorCode, description, failingUrl);
+					
 				}
 				
 				@Override
