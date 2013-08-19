@@ -16,7 +16,7 @@
     <string name="report_desc">Report: Press this to see your symptom report.</string>
     <string name="warning_report_desc">It may take a few seconds to load report page.\nIf report is not loaded, please check your WIFI connection.</string>
     <string name="hv_dc_warning">Disconnect Warning</string>
-    <string name="hv_dc_msg">Please note that if you disconnect your device, you will not be able to track your symptoms.\nTo track again, you need to reconnect, reauthenticate and reauthorize this app.\n\nDo you want to disconnect?</string>
+    <string name="hv_dc_msg">Please note that if you disconnect your device, you will not be able to track your symptoms.\n\nTo track again, you need to reconnect, reauthenticate and reauthorize this app.\n\nDo you want to disconnect?</string>
     <string name="hv_dc_YES">Yes</string>
     <string name="hv_dc_NO">No</string>
 

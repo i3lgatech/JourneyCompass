@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.microsoft.hsg.android.jc"
     android:versionCode="3"
-    android:versionName="1.0.3" >
+    android:versionName="1.1.0" >
 
     <uses-permission android:name="android.permission.INTERNET" ></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -41,8 +41,8 @@
         </activity>
         <activity
             android:name=".ReportActivity"
-            android:label="View Report"
-            android:screenOrientation="portrait" >
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="View Report" >
         </activity>
 		<receiver android:name="com.microsoft.hsg.android.jc.util.NetworkConnectivityReceiver">
 		    <intent-filter>

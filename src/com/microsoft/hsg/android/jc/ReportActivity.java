@@ -7,123 +7,100 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class ReportActivity extends Activity {
 	private WebView webView;
-	protected FrameLayout webViewPlaceholder;
-
+	protected String urlString = "https://journeycompass.i3l.gatech.edu/SymptomSummary.aspx";
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
 		setContentView(R.layout.report_activity);
-				
-		initializeUI();
-		/*
-		 * webView = (WebView) findViewById(R.id.reportView);
-		 * 
-		 * webView.setWebViewClient(new JCWebViewClient()); webView.loadUrl(
-		 * "http://journeycompass.i3l.gatech.edu/SymptomSummary.aspx");
-		 */
 
-	}
+		setProgressBarIndeterminateVisibility(true);
+		setProgressBarVisibility(true);
 
-	private void initializeUI() {
-		//final ProgressDialog pd = ProgressDialog.show(this, "", "Loading...",true);
-
-		// Retrieve UI elements
-		webViewPlaceholder = ((FrameLayout) findViewById(R.id.reportViewPlaceHolder));
-
-		// Initialize the WebView if necessary
-		if (webView == null) {
-			// Create the webview
-			webView = new WebView(this);
-			webView.setLayoutParams(new ViewGroup.LayoutParams(
-					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-			webView.getSettings().setSupportZoom(true);
-			webView.getSettings().setBuiltInZoomControls(true);
-			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-			webView.setScrollbarFadingEnabled(true);
+		try {
+			webView = (WebView) findViewById(R.id.reportWebView);
 			webView.getSettings().setJavaScriptEnabled(true);
-			webView.getSettings().setLoadsImagesAutomatically(true);
+			webView.getSettings().setBuiltInZoomControls(true);
 			webView.getSettings().setLoadWithOverviewMode(true);
 			webView.getSettings().setUseWideViewPort(true);
 
-			// Load the URLs inside the WebView, not in the external web browser
-			webView.setWebViewClient(new JCWebViewClient() {
-				ProgressDialog pd;
+			final Activity myActivity = this;
+
+			webView.setWebChromeClient(new WebChromeClient() {
+				public void onProgressChanged(WebView view, int progress) {
+					// Activities and WebViews measure progress with different
+					// scales.
+					// The progress meter will automatically disappear when we
+					// reach
+					// 100%
+					// myActivity.setProgress(progress * 1000);
+					setProgress(progress * 100);
+					if (progress == 100) {
+						setProgressBarIndeterminateVisibility(false);
+						setProgressBarVisibility(false);
+					}
+				}
+
+			});
+			webView.setWebViewClient(new WebViewClient() {
+				public void onReceivedError(WebView view, int errorCode,
+						String description, String failingUrl) {
+					Toast.makeText(myActivity, "Oh no! " + description,
+							Toast.LENGTH_SHORT).show();
+				}
 
 				@Override
-				public void onPageStarted(WebView view, String url, Bitmap favicon) {
-					pd = ProgressDialog.show(ReportActivity.this, "", "Loading...",true);
-					super.onPageStarted(view, url, favicon);
-			    }
-
-				@Override
-				public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-					if(pd.isShowing()&&pd!=null)
-	                {
-	                    pd.dismiss();
-	                }
-					super.onReceivedError(view, errorCode, description, failingUrl);
-					
+				public void onReceivedSslError(WebView view,
+						SslErrorHandler handler, SslError error) {
+					handler.proceed(); // Ignore SSL certificate errors
 				}
 				
 				@Override
-	            public void onPageFinished(WebView view, String url) {
-					super.onPageFinished(view, url);
-					
-	                if(pd.isShowing()&&pd!=null)
-	                {
-	                    pd.dismiss();
-	                }
-	            }
+				public void onPageStarted(WebView view, String url, Bitmap favicon) {
+					setProgressBarIndeterminateVisibility(true);
+					setProgressBarVisibility(true);
+
+					super.onPageStarted(view, url, favicon);
+			    }
 			});
 
 			// Load a page
-			webView.loadUrl("https://journeycompass.i3l.gatech.edu/SymptomSummary.aspx");
+			webView.loadUrl(urlString);
+
+			Button button = (Button) findViewById(R.id.reload);
+		    button.setOnClickListener(new View.OnClickListener() {
+		        public void onClick(View v) {
+		        	webView.stopLoading();
+		        	webView.loadUrl(urlString);             
+		        }
+		    });
+
+		} catch (Exception e) {
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
-		// Attach the WebView to its placeholder
-		webViewPlaceholder.addView(webView);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		if (webView != null) {
-			// Remove the WebView from the old placeholder
-			webViewPlaceholder.removeView(webView);
-		}
-
 		super.onConfigurationChanged(newConfig);
-
-		// Load the layout resource for the new configuration
-		setContentView(R.layout.report_activity);
-
-		// Reinitialize the UI
-		initializeUI();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		// Save the state of the WebView
-		webView.saveState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-
-		// Restore the state of the WebView
-		webView.restoreState(savedInstanceState);
 	}
 
 	public void loadSymptomActivity(View arg) {
@@ -133,11 +110,14 @@ public class ReportActivity extends Activity {
 
 	public void loadSettingsActivity(View arg) {
 		if (CustomUtil.getInstance().isNetworkAvailable(this)) {
-			Intent intent = new Intent(ReportActivity.this, SettingsActivity.class);
+			Intent intent = new Intent(ReportActivity.this,
+					SettingsActivity.class);
 			ReportActivity.this.startActivity(intent);
 		} else {
-			Toast.makeText(ReportActivity.this,
-					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					ReportActivity.this,
+					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 }

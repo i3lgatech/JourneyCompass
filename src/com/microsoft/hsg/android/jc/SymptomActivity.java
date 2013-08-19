@@ -56,7 +56,7 @@ public class SymptomActivity extends Activity implements
 	TextView nauseaValue;
 
 	TextView welcomeMsg;
-	
+
 	Condition symptoms[];
 	// Service object
 	private HealthVaultService service;
@@ -65,8 +65,6 @@ public class SymptomActivity extends Activity implements
 	PainScale pScale = new PainScale();
 	Context context;
 
-	private String patientName;
-	
 	protected SeekBar getPainSeek() {
 		return painSeek;
 	}
@@ -143,7 +141,7 @@ public class SymptomActivity extends Activity implements
 		nauseaValue = (TextView) findViewById(R.id.nauseaValue);
 
 		welcomeMsg = (TextView) findViewById(R.id.patientName);
-		
+
 		painSeek.setOnSeekBarChangeListener(this);
 		fatigueSeek.setOnSeekBarChangeListener(this);
 		sleepSeek.setOnSeekBarChangeListener(this);
@@ -179,21 +177,27 @@ public class SymptomActivity extends Activity implements
 
 	public void loadReportActivity(View arg) {
 		if (CustomUtil.getInstance().isNetworkAvailable(this)) {
-			Intent intent = new Intent(SymptomActivity.this, ReportActivity.class);
+			Intent intent = new Intent(SymptomActivity.this,
+					ReportActivity.class);
 			SymptomActivity.this.startActivity(intent);
 		} else {
-			Toast.makeText(SymptomActivity.this,
-					"Report requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					SymptomActivity.this,
+					"Report requires Internet connection.\nPlease try again in Wi-Fi Network.",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
 	public void loadSettingsActivity(View arg) {
 		if (CustomUtil.getInstance().isNetworkAvailable(this)) {
-			Intent intent = new Intent(SymptomActivity.this, SettingsActivity.class);
+			Intent intent = new Intent(SymptomActivity.this,
+					SettingsActivity.class);
 			SymptomActivity.this.startActivity(intent);
 		} else {
-			Toast.makeText(SymptomActivity.this,
-					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.", Toast.LENGTH_LONG).show();
+			Toast.makeText(
+					SymptomActivity.this,
+					"Settings requires Internet connection.\nPlease try again in Wi-Fi Network.",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -352,11 +356,16 @@ public class SymptomActivity extends Activity implements
 		// TODO Auto-generated method stub
 		Log.w("SymptomActivity", "onResume");
 
-		service = HealthVaultService.getInstance();		
+		service = HealthVaultService.getInstance();
 		String name = SettingsActivity.getPatientName();
 		if (name != null)
-			welcomeMsg.setText("Welcome! "+ name);
-
+			welcomeMsg.setText("Welcome! " + name);
+		else {
+			Intent intent = new Intent(SymptomActivity.this,
+					SettingsActivity.class);
+			SymptomActivity.this.startActivity(intent);
+		}
 		super.onResume();
 	}
+
 }

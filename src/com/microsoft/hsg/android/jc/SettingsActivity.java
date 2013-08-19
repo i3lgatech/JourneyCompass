@@ -35,14 +35,14 @@ public class SettingsActivity extends Activity {
 	private Button reportButton;
 	Button disconnectButton;
 	HealthVaultService hvService;
-	
+
 	private static String patientName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
+
 		Log.w("SettingsActivity", "onCreate");
 
 		setContentView(R.layout.settings_activity);
@@ -50,7 +50,7 @@ public class SettingsActivity extends Activity {
 		if (hvService == null) {
 			hvService = MainActivity.setHeathVaultInstance(this);
 		}
-		
+
 		disconnectButton = (Button) findViewById(R.id.disconnectButton);
 		symptomsButton = (Button) findViewById(R.id.symptom);
 		reportButton = (Button) findViewById(R.id.report);
@@ -85,46 +85,60 @@ public class SettingsActivity extends Activity {
 								if (intent != null) {
 									startActivity(intent);
 								} else {
-									Toast.makeText(SettingsActivity.this,
+									Toast.makeText(
+											SettingsActivity.this,
 											"Critical Error Occurred. Please Try Again",
 											Toast.LENGTH_LONG).show();
-									hvService = MainActivity.setHeathVaultInstance(SettingsActivity.this);
+									hvService = MainActivity
+											.setHeathVaultInstance(SettingsActivity.this);
 								}
 							}
 						}
 					}.execute();
 				} else {
-					SettingsActivity.this.Confirm ();
+					SettingsActivity.this.Confirm();
 				}
 			}
 		});
 	}
 
 	public void Confirm() {
-	    AlertDialog dialog = new AlertDialog.Builder(this).create();
-	    dialog.setTitle(getResources().getString(R.string.hv_dc_warning));
-	    dialog.setMessage(getResources().getString(R.string.hv_dc_msg));
-	    dialog.setCancelable(false);
-	    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.hv_dc_YES), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int buttonId) {
-				disconnectButton.setText("Connect to Microsoft¨ HealthVault¨");
-				hvService.reset();
-				CookieSyncManager.createInstance(SettingsActivity.this); 
-				CookieManager cookieManager = CookieManager.getInstance();
-				cookieManager.removeAllCookie();
-				hvService = MainActivity.setHeathVaultInstance(SettingsActivity.this);
-				Toast.makeText(SettingsActivity.this, "Device Disconnected.\nYou have to connect again to track your symptoms.", Toast.LENGTH_LONG).show();
-	        }
-	    });
-	    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.hv_dc_NO), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int buttonId) {
-				Toast.makeText(SettingsActivity.this, "Disconnect Canceled", Toast.LENGTH_LONG).show();
-	        }
-	    });
-	    dialog.setIcon(android.R.drawable.ic_dialog_alert);
-	    dialog.show();
+		AlertDialog dialog = new AlertDialog.Builder(this).create();
+		dialog.setTitle(getResources().getString(R.string.hv_dc_warning));
+		dialog.setMessage(getResources().getString(R.string.hv_dc_msg));
+		dialog.setCancelable(false);
+		dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources()
+				.getString(R.string.hv_dc_YES),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int buttonId) {
+						disconnectButton
+								.setText("Connect to Microsoft¨ HealthVault¨");
+						hvService.reset();
+						CookieSyncManager.createInstance(SettingsActivity.this);
+						CookieManager cookieManager = CookieManager
+								.getInstance();
+						cookieManager.removeAllCookie();
+						hvService = MainActivity
+								.setHeathVaultInstance(SettingsActivity.this);
+						Toast.makeText(
+								SettingsActivity.this,
+								"Device Disconnected.\nYou have to connect again to track your symptoms.",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+		dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources()
+				.getString(R.string.hv_dc_NO),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int buttonId) {
+						Toast.makeText(SettingsActivity.this,
+								"Disconnect Canceled", Toast.LENGTH_LONG)
+								.show();
+					}
+				});
+		dialog.setIcon(android.R.drawable.ic_dialog_alert);
+		dialog.show();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		InitializeControls();
@@ -137,7 +151,8 @@ public class SettingsActivity extends Activity {
 					SymptomActivity.class);
 			SettingsActivity.this.startActivity(intent);
 		} else {
-			Toast.makeText(SettingsActivity.this,
+			Toast.makeText(
+					SettingsActivity.this,
 					"You are not connected to HealthVault.\nPlease connect to HealthVault before you begin symptom tracking.",
 					Toast.LENGTH_LONG).show();
 		}
@@ -152,12 +167,12 @@ public class SettingsActivity extends Activity {
 			Toast.makeText(
 					SettingsActivity.this,
 					"You are not connected to HealthVault.\nPlease connect to HealthVault before you begin symptom reporting.",
-		Toast.LENGTH_LONG).show();			
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
 	private void InitializeControls() {
-		//TextView msg = (TextView) findViewById(R.id.welcomeText);
+		// TextView msg = (TextView) findViewById(R.id.welcomeText);
 		Log.w("SettingsActivity", "InitalizeControls");
 
 		switch (hvService.getConnectionStatus()) {
@@ -181,10 +196,12 @@ public class SettingsActivity extends Activity {
 				@Override
 				protected void onPostExecute(Intent intent) {
 					if (exception != null) {
-						Toast.makeText(SettingsActivity.this,
-								"Getting Name Failed: "+exception.getMessage(),
+						Toast.makeText(
+								SettingsActivity.this,
+								"Getting Name Failed: "
+										+ exception.getMessage(),
 								Toast.LENGTH_LONG).show();
-					} 
+					}
 				}
 			}.execute();
 
@@ -195,7 +212,7 @@ public class SettingsActivity extends Activity {
 		}
 	}
 
-	public static String getPatientName () {
+	public static String getPatientName() {
 		return patientName;
 	}
 }

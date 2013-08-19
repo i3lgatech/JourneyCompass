@@ -24,34 +24,35 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int WelcomeName=0x7f080007;
-        public static final int action_settings=0x7f08001c;
+        public static final int WelcomeName=0x7f080009;
+        public static final int action_settings=0x7f08001d;
         public static final int auth=0x7f080002;
-        public static final int constipationLabel=0x7f080013;
-        public static final int constipationSeek=0x7f080014;
-        public static final int constipationValue=0x7f080015;
+        public static final int constipationLabel=0x7f080014;
+        public static final int constipationSeek=0x7f080015;
+        public static final int constipationValue=0x7f080016;
         public static final int disconnectButton=0x7f080008;
-        public static final int fatigueLabel=0x7f080016;
-        public static final int fatigueSeek=0x7f080017;
-        public static final int fatigueValue=0x7f080018;
+        public static final int fatigueLabel=0x7f080017;
+        public static final int fatigueSeek=0x7f080018;
+        public static final int fatigueValue=0x7f080019;
         public static final int goButton=0x7f080001;
-        public static final int nauseaLabel=0x7f080010;
-        public static final int nauseaSeek=0x7f080011;
-        public static final int nauseaValue=0x7f080012;
-        public static final int painLabel=0x7f08000d;
-        public static final int painSeek=0x7f08000e;
-        public static final int painValue=0x7f08000f;
-        public static final int patientName=0x7f08000c;
+        public static final int nauseaLabel=0x7f080011;
+        public static final int nauseaSeek=0x7f080012;
+        public static final int nauseaValue=0x7f080013;
+        public static final int painLabel=0x7f08000e;
+        public static final int painSeek=0x7f08000f;
+        public static final int painValue=0x7f080010;
+        public static final int patientName=0x7f08000d;
         public static final int putThing=0x7f080003;
-        public static final int report=0x7f080009;
-        public static final int reportViewPlaceHolder=0x7f080004;
+        public static final int reload=0x7f080007;
+        public static final int report=0x7f08000a;
+        public static final int reportWebView=0x7f080004;
         public static final int settings=0x7f080005;
-        public static final int sleepLabel=0x7f080019;
-        public static final int sleepSeek=0x7f08001a;
-        public static final int sleepValue=0x7f08001b;
+        public static final int sleepLabel=0x7f08001a;
+        public static final int sleepSeek=0x7f08001b;
+        public static final int sleepValue=0x7f08001c;
         public static final int symptom=0x7f080006;
-        public static final int textView2=0x7f08000a;
-        public static final int textView3=0x7f08000b;
+        public static final int textView2=0x7f08000b;
+        public static final int textView3=0x7f08000c;
         public static final int welcomeText=0x7f080000;
     }
     public static final class layout {
