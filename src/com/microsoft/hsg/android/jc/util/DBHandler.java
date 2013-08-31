@@ -18,8 +18,8 @@ import com.microsoft.hsg.request.SimpleRequestTemplate;
 public class DBHandler {
 
 	private static DBHandler instance;
-	private static ObjectContainer dbRequestContainer;
-	private static ObjectContainer dbTemplateContainer;
+	private ObjectContainer dbRequestContainer;
+	private ObjectContainer dbTemplateContainer;
 	private static String directory;
 	
 	
@@ -52,11 +52,13 @@ public class DBHandler {
 	}
 
 	private void openRequestDb(){
-		dbRequestContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), directory+Constants.REQUEST_DB_FILE_NAME);
+		if (dbRequestContainer == null || dbRequestContainer.ext().isClosed()) 
+			dbRequestContainer = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), directory+Constants.REQUEST_DB_FILE_NAME);
 	}
 	
 	private void closeRequestDb(){
-		dbRequestContainer.close();
+		if (dbRequestContainer != null)
+			dbRequestContainer.close();
 	}
 	
 	public ArrayList<Request> getRequests(){

@@ -64,6 +64,7 @@ public class SymptomActivity extends Activity implements
 	private Record selectedRecord;
 	PainScale pScale = new PainScale();
 	Context context;
+	private static String patientName;
 
 	protected SeekBar getPainSeek() {
 		return painSeek;
@@ -300,12 +301,8 @@ public class SymptomActivity extends Activity implements
 						SymptomActivity.this,
 						"Failed to Enter Your Symptoms (error="
 								+ err_msg
-								+ ").\nPlease check your Connection to HealthVault.",
+								+ ")",
 						Toast.LENGTH_LONG).show();
-
-				Intent intent = new Intent(SymptomActivity.this,
-						SettingsActivity.class);
-				SymptomActivity.this.startActivity(intent);
 			}
 		}
 	}
@@ -327,6 +324,7 @@ public class SymptomActivity extends Activity implements
 			if (CustomUtil.getInstance().isNetworkAvailable(this)) {
 				PersonInfo personInfo = service.getPersonInfoList().get(0);
 				Record record = personInfo.getRecords().get(0);
+				patientName = (record.getName());
 				SimpleRequestTemplate template = new SimpleRequestTemplate(
 						service.getConnection(), record.getPersonId(),
 						record.getId());
@@ -343,9 +341,11 @@ public class SymptomActivity extends Activity implements
 					Log.w("MYTAG", "Name not found", e);
 				}
 
+				Log.d("JC", "Start - Writing to DB4O.");
 				DBHandler.getInstance().addRequest(request);
-				DBHandler.getInstance().deleteTemplates();
-				DBHandler.getInstance().addTemplate(null);
+				//DBHandler.getInstance().deleteTemplates();
+				//DBHandler.getInstance().addTemplate(null);
+				Log.d("JC", "Done - Writing to DB4O.");
 				// write to db
 			}
 		}
@@ -360,10 +360,10 @@ public class SymptomActivity extends Activity implements
 		String name = SettingsActivity.getPatientName();
 		if (name != null)
 			welcomeMsg.setText("Welcome! " + name);
-		else {
-			Intent intent = new Intent(SymptomActivity.this,
-					SettingsActivity.class);
-			SymptomActivity.this.startActivity(intent);
+		else if (patientName != null){
+			welcomeMsg.setText("Welcome! " + patientName);
+		} else {
+			welcomeMsg.setText("Welcome! ");
 		}
 		super.onResume();
 	}

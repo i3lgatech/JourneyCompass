@@ -9,6 +9,7 @@ import com.microsoft.hsg.android.Record;
 import com.microsoft.hsg.android.HealthVaultService.ConnectionStatus;
 import com.microsoft.hsg.android.HealthVaultSettings;
 import com.microsoft.hsg.android.jc.util.AppConfiguration;
+import com.microsoft.hsg.android.jc.util.CustomUtil;
 import com.microsoft.hsg.android.jc.util.DBHandler;
 
 import android.app.Activity;
@@ -175,40 +176,48 @@ public class SettingsActivity extends Activity {
 		// TextView msg = (TextView) findViewById(R.id.welcomeText);
 		Log.w("SettingsActivity", "InitalizeControls");
 
-		switch (hvService.getConnectionStatus()) {
-		case Connected:
-			disconnectButton.setText("Disconnect from Microsoft¨ HealthVault¨");
-			new AsyncTask<Context, Void, Intent>() {
-				private Exception exception;
+		if (CustomUtil.getInstance().isNetworkAvailable(this)) {
+			switch (hvService.getConnectionStatus()) {
+			case Connected:
+				disconnectButton
+						.setText("Disconnect from Microsoft¨ HealthVault¨");
+				new AsyncTask<Context, Void, Intent>() {
+					private Exception exception;
 
-				protected Intent doInBackground(Context... context) {
-					try {
-						PersonInfo personInfo = hvService.getPersonInfoList()
-								.get(0);
-						Record record = personInfo.getRecords().get(0);
-						patientName = (record.getName());
-					} catch (Exception e) {
-						exception = e;
+					protected Intent doInBackground(Context... context) {
+						try {
+							PersonInfo personInfo = hvService
+									.getPersonInfoList().get(0);
+							Record record = personInfo.getRecords().get(0);
+							patientName = (record.getName());
+						} catch (Exception e) {
+							exception = e;
+						}
+						return null;
 					}
-					return null;
-				}
 
-				@Override
-				protected void onPostExecute(Intent intent) {
-					if (exception != null) {
-						Toast.makeText(
-								SettingsActivity.this,
-								"Getting Name Failed: "
-										+ exception.getMessage(),
-								Toast.LENGTH_LONG).show();
+					@Override
+					protected void onPostExecute(Intent intent) {
+						if (exception != null) {
+							Toast.makeText(
+									SettingsActivity.this,
+									"Getting Name Failed: "
+											+ exception.getMessage(),
+									Toast.LENGTH_LONG).show();
+						}
 					}
-				}
-			}.execute();
+				}.execute();
 
-			break;
-		case NotConnected:
-			disconnectButton.setText("Connect to Microsoft¨ HealthVault¨");
-			break;
+				break;
+			case NotConnected:
+				disconnectButton.setText("Connect to Microsoft¨ HealthVault¨");
+				break;
+			}
+		} else {
+			Toast.makeText(
+					SettingsActivity.this,
+					"Notice: Network is not available.",
+					Toast.LENGTH_LONG).show();
 		}
 	}
 

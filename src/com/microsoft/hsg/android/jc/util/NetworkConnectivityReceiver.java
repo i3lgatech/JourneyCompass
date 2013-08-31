@@ -30,11 +30,14 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		ConnectivityManager connectivityMgr = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		Log.w("NetworkConnectivityReceiver", "onReceive()");
+		Log.d("NetworkConnectivityReceiver", "onReceive()");
 		if (connectivityMgr == null) {
+			Log.d("NetworkConnectivityReceiver", "onReceive() returned");
 			return;
 		} else if (connectivityMgr.getActiveNetworkInfo() != null
 				&& connectivityMgr.getActiveNetworkInfo().isConnected()) {
+			Log.d("NetworkConnectivityReceiver",
+					"onReceive() SendOfflineRequest");
 			SendOfflineRequest sendRequests = new SendOfflineRequest(context);
 			sendRequests.execute();
 		}
@@ -84,35 +87,37 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 			try {
 
 				Log.w("NetworkConnectivityReceiver", "connected");
-				ArrayList<Request> requests = DBHandler.getInstance()
-						.getRequests();
 				service = HealthVaultService.getInstance();
 				service.connect(context);
 				SimpleRequestTemplate template = null;
 				if (service.getConnectionStatus() == HealthVaultService.ConnectionStatus.Connected) {
-					while (!inetAddr())
-						;
+					while (!inetAddr()) {
+					}
 					PersonInfo personInfo = service.getPersonInfoList().get(0);
 					Record record = personInfo.getRecords().get(0);
 					template = new SimpleRequestTemplate(
 							service.getConnection(), record.getPersonId(),
 							record.getId());
-					Log.w("NetworkConnectivityReceiver", "record details : "+record.getName());
-				}
-				if (template != null) {
+					Log.w("NetworkConnectivityReceiver", "record details : "
+							+ record.getName());
 
-					if (requests != null) {
-						ListIterator<Request> iter = requests.listIterator();
-						Log.w("NetworkConnectivityReceiver", "request count : "+requests.size());
-						while (iter.hasNext()) {
-							Request currentRequest = iter.next();
-							template.makeRequest(currentRequest);
-							//DBHandler.getInstance().deleteRequest(currentRequest);
+					if (template != null) {
+						ArrayList<Request> requests = DBHandler.getInstance()
+								.getRequests();
+						if (requests != null && requests.size() > 0) {
+							ListIterator<Request> iter = requests
+									.listIterator();
+							Log.w("NetworkConnectivityReceiver",
+									"request count : " + requests.size());
+							while (iter.hasNext()) {
+								Request currentRequest = iter.next();
+								template.makeRequest(currentRequest);
+								// DBHandler.getInstance().deleteRequest(currentRequest);
+							}
 						}
+						DBHandler.getInstance().deleteRequests();
 					}
-					DBHandler.getInstance().deleteRequests();
 				}
-
 			} catch (Exception e) {
 				exception = e;
 			}
