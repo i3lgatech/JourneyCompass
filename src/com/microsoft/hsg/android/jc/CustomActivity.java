@@ -220,8 +220,8 @@ public class CustomActivity extends Activity {
 			}
 			
 			DBHandler.getInstance().addRequest(request);
-			DBHandler.getInstance().deleteTemplates();
-			DBHandler.getInstance().addTemplate(null);
+//			DBHandler.getInstance().deleteTemplates();
+//			DBHandler.getInstance().addTemplate(null);
 			// write to db
 		}
 	}

@@ -30,9 +30,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		ConnectivityManager connectivityMgr = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-		Log.d("NetworkConnectivityReceiver", "onReceive()");
 		if (connectivityMgr == null) {
-			Log.d("NetworkConnectivityReceiver", "onReceive() returned");
+			Log.w("NetworkConnectivityReceiver", "onReceive() returned");
 			return;
 		} else if (connectivityMgr.getActiveNetworkInfo() != null
 				&& connectivityMgr.getActiveNetworkInfo().isConnected()) {
@@ -50,7 +49,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
 		try {
 			Socket s = new Socket("utcnist.colorado.edu", 37);
-
+			s.setSoTimeout(5000);
+			
 			InputStream i = s.getInputStream();
 
 			Scanner scan = new Scanner(i);
@@ -70,8 +70,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 	}
 
 	private class SendOfflineRequest extends AsyncTask<Void, Void, Void> {
-		private String painScale;
-		private Exception exception;
+		//private String painScale;
+		//private Exception exception;
 		private Context context;
 
 		public SendOfflineRequest(Context context) {
@@ -86,12 +86,22 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 		protected Void doInBackground(Void... v) {
 			try {
 
-				Log.w("NetworkConnectivityReceiver", "connected");
 				service = HealthVaultService.getInstance();
 				service.connect(context);
 				SimpleRequestTemplate template = null;
 				if (service.getConnectionStatus() == HealthVaultService.ConnectionStatus.Connected) {
+					ArrayList<Request> requests = DBHandler.getInstance()
+							.getRequests();
+					if (requests.size() <= 0) return null;
+					
+					int cnt=0;
+					Log.d("NetworkConnectivityReceiver", "HV connected");
 					while (!inetAddr()) {
+						cnt++;
+						if (cnt >= 3) {
+							Log.d("NetworkConnectivityReceiver", "NetworkConnectivityReceiver Canceled");
+							return null;
+						}
 					}
 					PersonInfo personInfo = service.getPersonInfoList().get(0);
 					Record record = personInfo.getRecords().get(0);
@@ -102,8 +112,6 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 							+ record.getName());
 
 					if (template != null) {
-						ArrayList<Request> requests = DBHandler.getInstance()
-								.getRequests();
 						if (requests != null && requests.size() > 0) {
 							ListIterator<Request> iter = requests
 									.listIterator();
@@ -119,7 +127,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 					}
 				}
 			} catch (Exception e) {
-				exception = e;
+				//exception = e;
+				Log.w("NetworkConnectivityReceiver", "Error Sending Data:"+e.getMessage());
 			}
 
 			return null;
